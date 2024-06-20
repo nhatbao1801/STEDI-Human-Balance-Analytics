@@ -32,6 +32,8 @@ on step.serialnumber=cus_dis.serialnumber
 SQLQuery_node1718648689475 = sparkSqlQuery(glueContext, query = SqlQuery0, mapping = {"step":step_trainer_landing_node1718647833686, "cus":customer_curated_node1718647839609}, transformation_ctx = "SQLQuery_node1718648689475")
 
 # Script generated for node Amazon S3
-AmazonS3_node1718647842139 = glueContext.write_dynamic_frame.from_options(frame=SQLQuery_node1718648689475, connection_type="s3", format="json", connection_options={"path": "s3://baotcn/step_trainer/trusted/", "partitionKeys": []}, transformation_ctx="AmazonS3_node1718647842139")
-
+AmazonS3_node1718647842139 = glueContext.getSink(path="s3://baotcn/step_trainer/trusted/", connection_type="s3", updateBehavior="UPDATE_IN_DATABASE", partitionKeys=[], enableUpdateCatalog=True, transformation_ctx="AmazonS3_node1718647842139")
+AmazonS3_node1718647842139.setCatalogInfo(catalogDatabase="baotcn_db",catalogTableName="step_trainer trusted_catalog")
+AmazonS3_node1718647842139.setFormat("json")
+AmazonS3_node1718647842139.writeFrame(SQLQuery_node1718648689475)
 job.commit()

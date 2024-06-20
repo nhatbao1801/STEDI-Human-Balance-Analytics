@@ -29,6 +29,8 @@ where myDataSource.shareWithResearchAsOfDate is not null
 SQLQuery_node1718640489603 = sparkSqlQuery(glueContext, query = SqlQuery0, mapping = {"myDataSource":customer_landing_node1718639695744}, transformation_ctx = "SQLQuery_node1718640489603")
 
 # Script generated for node customer_trusted
-customer_trusted_node1718639855460 = glueContext.write_dynamic_frame.from_options(frame=SQLQuery_node1718640489603, connection_type="s3", format="json", connection_options={"path": "s3://baotcn/customers/trusted/", "partitionKeys": []}, transformation_ctx="customer_trusted_node1718639855460")
-
+customer_trusted_node1718639855460 = glueContext.getSink(path="s3://baotcn/customers/trusted/", connection_type="s3", updateBehavior="UPDATE_IN_DATABASE", partitionKeys=[], enableUpdateCatalog=True, transformation_ctx="customer_trusted_node1718639855460")
+customer_trusted_node1718639855460.setCatalogInfo(catalogDatabase="baotcn_db",catalogTableName="customer_trusted_catalog")
+customer_trusted_node1718639855460.setFormat("json")
+customer_trusted_node1718639855460.writeFrame(SQLQuery_node1718640489603)
 job.commit()
